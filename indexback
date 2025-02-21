@@ -1,0 +1,146 @@
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+
+// Crear cliente de WhatsApp
+const client = new Client({
+    authStrategy: new LocalAuth(),
+});
+
+// Mostrar el QR para iniciar sesión
+client.on('qr', (qr) => {
+    console.log('Escanea este código QR con tu aplicación de WhatsApp:');
+    qrcode.generate(qr, { small: true });
+});
+
+// Confirmar conexión
+client.on('ready', () => {
+    console.log('¡Bot conectado y listo para recibir mensajes!');
+});
+
+// Variable para controlar el estado del usuario (qué menú está viendo)
+let estado = {};
+
+// Escuchar mensajes entrantes
+client.on('message', (message) => {
+    console.log(`Mensaje recibido de ${message.from}: ${message.body}`);
+
+    // Si no hay estado, es el menú principal
+    if (!estado[message.from]) {
+        estado[message.from] = 'menu_principal'; // Establecer que está en el menú principal
+        const menu = `
+        ¡Bienvenido! ¿En qué puedo ayudarte hoy?
+
+        1- Horarios
+        2- Precios
+        3- Turnos
+        Escribe el número de la opción que te interesa o escribe "menu" en cualquier momento para volver al menú principal.`;
+        client.sendMessage(message.from, menu); // Responder sin citar el mensaje
+    } else if (estado[message.from] === 'menu_principal') {
+        // Menú principal
+        if (message.body === '1') {
+            estado[message.from] = 'horarios'; // Cambiar al submenú de horarios
+            const horarios = `
+            1- Médico 1
+            2- Médico 2
+            Escribe el número del médico para ver los horarios o escribe "menu" para volver al menú principal.`;
+            client.sendMessage(message.from, horarios); // Responder sin citar el mensaje
+        } else if (message.body === '2') {
+            estado[message.from] = 'precios'; // Cambiar al submenú de precios
+            const precios = `
+            1- Precio Médico 1
+            2- Precio Médico 2
+            Escribe el número del médico para ver los precios o escribe "menu" para volver al menú principal.`;
+            client.sendMessage(message.from, precios); // Responder sin citar el mensaje
+        } else if (message.body === '3') {
+            estado[message.from] = 'turnos'; // Cambiar al submenú de turnos
+            const turnos = `
+            1- Turno para Médico Kesqui
+            2- Turno para Médico Yague
+            Escribe el número del médico para agendar un turno o escribe "menu" para volver al menú principal.`;
+            client.sendMessage(message.from, turnos); // Responder sin citar el mensaje
+        } else if (message.body.toLowerCase() === 'menu') {
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+            const menu = `
+            ¡Bienvenido! ¿En qué puedo ayudarte hoy?
+
+            1- Horarios
+            2- Precios
+            3- Turnos
+            Escribe el número de la opción que te interesa o escribe "menu" en cualquier momento para volver al menú principal.`;
+            client.sendMessage(message.from, menu); // Responder sin citar el mensaje
+        } else {
+            client.sendMessage(message.from, 'Lo siento, no entiendo ese comando. Escribe "menu" para ver las opciones disponibles.'); // Responder sin citar el mensaje
+        }
+    } else if (estado[message.from] === 'horarios') {
+        // Submenú de horarios
+        if (message.body === '1') {
+            client.sendMessage(message.from, 'Los horarios del Médico 1 son: Lunes a Viernes de 9:00 AM a 5:00 PM.');
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+        } else if (message.body === '2') {
+            client.sendMessage(message.from, 'Los horarios del Médico 2 son: Lunes a Viernes de 10:00 AM a 6:00 PM.');
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+        } else if (message.body.toLowerCase() === 'menu') {
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+            const menu = `
+            ¡Bienvenido! ¿En qué puedo ayudarte hoy?
+
+            1- Horarios
+            2- Precios
+            3- Turnos
+            Escribe el número de la opción que te interesa o escribe "menu" en cualquier momento para volver al menú principal.`;
+            client.sendMessage(message.from, menu); // Responder sin citar el mensaje
+        } else {
+            client.sendMessage(message.from, 'Opción no válida. Por favor, elige 1 para Médico 1 o 2 para Médico 2 o escribe "menu" para volver al menú principal.'); // Responder sin citar el mensaje
+        }
+    } else if (estado[message.from] === 'precios') {
+        // Submenú de precios
+        if (message.body === '1') {
+            client.sendMessage(message.from, 'El precio de la consulta con Médico 1 es $1000.');
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+        } else if (message.body === '2') {
+            client.sendMessage(message.from, 'El precio de la consulta con Médico 2 es $1200.');
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+        } else if (message.body.toLowerCase() === 'menu') {
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+            const menu = `
+            ¡Bienvenido! ¿En qué puedo ayudarte hoy?
+
+            1- Horarios
+            2- Precios
+            3- Turnos
+            Escribe el número de la opción que te interesa o escribe "menu" en cualquier momento para volver al menú principal.`;
+            client.sendMessage(message.from, menu); // Responder sin citar el mensaje
+        } else {
+            client.sendMessage(message.from, 'Opción no válida. Por favor, elige 1 para Médico 1 o 2 para Médico 2 o escribe "menu" para volver al menú principal.'); // Responder sin citar el mensaje
+        }
+    } else if (estado[message.from] === 'turnos') {
+        // Submenú de turnos
+        if (message.body === '1') {
+            client.sendMessage(message.from, 'El turno para el Médico Kesqui está disponible para el lunes a las 10:00 AM.');
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+        } else if (message.body === '2') {
+            client.sendMessage(message.from, 'El turno para el Médico Yague está disponible para el martes a las 11:00 AM.');
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+        } else if (message.body.toLowerCase() === 'menu') {
+            estado[message.from] = 'menu_principal'; // Volver al menú principal
+            const menu = `
+            ¡Bienvenido! ¿En qué puedo ayudarte hoy?
+
+            1- Horarios
+            2- Precios
+            3- Turnos
+            Escribe el número de la opción que te interesa o escribe "menu" en cualquier momento para volver al menú principal.`;
+            client.sendMessage(message.from, menu); // Responder sin citar el mensaje
+        } else {
+            client.sendMessage(message.from, 'Opción no válida. Por favor, elige 1 para Kesqui o 2 para Yague o escribe "menu" para volver al menú principal.'); // Responder sin citar el mensaje
+        }
+    }
+});
+
+// Manejar errores de autenticación
+client.on('auth_failure', (msg) => {
+    console.error('Error de autenticación:', msg);
+});
+
+// Inicializar cliente
+client.initialize();

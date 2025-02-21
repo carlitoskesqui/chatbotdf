@@ -1,0 +1,4 @@
+2025/02/20-22:05:47.750 2c80 Reusing MANIFEST C:\Users\CreaTecno\Desktop\chatbot\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/02/20-22:05:47.750 2c80 Recovering log #60
+2025/02/20-22:05:47.797 2c80 Reusing old log C:\Users\CreaTecno\Desktop\chatbot\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000060.log 
+2025/02/20-22:05:51.115 2ab4 Manual compaction at level-0 from '\x00\x19\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1a\x00\x00\x00' @ 0 : 0; will stop at (end)
