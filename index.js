@@ -51,4 +51,21 @@ client.on('auth_failure', (msg) => {
     console.error('Error de autenticación:', msg);
 });
 
+
+const express = require('express');
+const app = express();
+
+// Definir el puerto que Render proporcionará automáticamente
+const port = process.env.PORT || 3000; // Puerto predeterminado 3000
+
+app.get('/', (req, res) => {
+    res.send('Bot de WhatsApp funcionando');
+});
+
+// Escuchar en el puerto
+app.listen(port, () => {
+    console.log(`Servidor escuchando en el puerto ${port}`);
+});
+
+
 client.initialize();
